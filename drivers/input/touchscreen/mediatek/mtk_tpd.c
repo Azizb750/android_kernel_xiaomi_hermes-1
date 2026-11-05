@@ -108,7 +108,8 @@ static long tpd_compat_ioctl(struct file *file, unsigned int cmd, unsigned long 
 		printk("tpd: unknown IOCTL: 0x%08x\n", cmd);
 		ret = -ENOIOCTLCMD;
 		break;
-	}	
+	}
+	return ret;
 }
 #endif
 static long tpd_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long arg)

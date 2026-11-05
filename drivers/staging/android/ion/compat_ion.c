@@ -334,7 +334,7 @@ static int compat_put_ion_mm_sf_buf_info(
 
 	int i, err;
 
-	err |= get_user(handle, &data->handle);
+	err = get_user(handle, &data->handle);
 	err |= put_user(handle, &data32->handle);
 
 	for(i = 0; i < ION_MM_SF_BUF_INFO_LEN; i++) {

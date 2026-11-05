@@ -292,12 +292,12 @@ static ssize_t dev_char_write(struct file *file, const char __user *buf, size_t 
         dma_addr_t wave_phy_out;
 	
 #if 1 
-	unsigned int *wave_vir_time,*wave_vir_time_backup,*wave_vir_out;
+	unsigned int *wave_vir_time,*wave_vir_time_backup,*wave_vir_out = NULL;
 #else
 	void *wave_vir;
 #endif
 
-	int ret, num,num_clock;
+	int ret, num = 0,num_clock;
 	int buf_size = 0;
 	int i,j;
 	int total_time = 0;
@@ -322,6 +322,7 @@ static ssize_t dev_char_write(struct file *file, const char __user *buf, size_t 
 	if(ret) 
 	{
 		CONSUMERIR_ERR(" write, copy from user fail %d\n", ret);
+		ret = -EFAULT;
 		goto exit;
 	}
 
@@ -351,11 +352,17 @@ if (!wave_out) {
 		return ret;
 	}
 #endif
-        wave_vir_out = dma_alloc_coherent(&consumerir_dev.plat_dev->dev, num*sizeof(unsigned int), &wave_phy_out, GFP_KERNEL);
+        if (num <= 0)
+	{
+		ret = -EINVAL;
+		goto exit;
+	}
+	wave_vir_out = dma_alloc_coherent(&consumerir_dev.plat_dev->dev, num*sizeof(unsigned int), &wave_phy_out, GFP_KERNEL);
 if(!wave_vir_out)
 	{
 		CONSUMERIR_ERR(" alloc memory fail\n");
-		return -ENOMEM;
+		ret = -ENOMEM;
+		goto exit;
 	}
        for(i = 0; i < num; i++)
 	{
@@ -401,7 +408,8 @@ for (i = 0; i < buf_size; i++)
                                 if(rel_buffer_num>=num)
                                  {
                                    CONSUMERIR_ERR("zly5_error rel_buffer_num>=num is error rel_buffer_num=%d,num=%d \n",rel_buffer_num,num);
-                                   return ret;
+                                   ret = -EINVAL;
+                                   goto exit;
                                   }
 			}
 		}
@@ -466,8 +474,9 @@ for(i = 0; i <= rel_buffer_num; i++)
 exit:
 	CONSUMERIR_ERR(" done, clean up\n");
 #if 1	
-	dma_free_coherent(&consumerir_dev.plat_dev->dev, count, *wave_vir_time, wave_phy_time);
-        dma_free_coherent(&consumerir_dev.plat_dev->dev, num*sizeof(unsigned int), *wave_vir_out, wave_phy_out);
+	dma_free_coherent(&consumerir_dev.plat_dev->dev, count, wave_vir_time, wave_phy_time);
+	if (wave_vir_out)
+		dma_free_coherent(&consumerir_dev.plat_dev->dev, num*sizeof(unsigned int), wave_vir_out, wave_phy_out);
 	if(consumerir_power_flag == 1)
 	{
 		consumerir_power_flag = 0;

@@ -378,14 +378,19 @@ static int dt_scan_memory(unsigned long node, const char *uname, int depth, void
 
 unsigned long long atf_get_from_dt(unsigned long *phy_addr, unsigned int *len) {
     unsigned long node = 0;
-    mem_desc_t *mem_desc;
+    mem_desc_t *mem_desc = NULL;
+
+    *phy_addr = 0;
+    *len = 0;
     if (of_scan_flat_dt(dt_scan_memory, &node)) {
         mem_desc = (mem_desc_t *)of_get_flat_dt_prop(node, "tee_reserved_mem", NULL);
         if (mem_desc && mem_desc->size) {
             pr_notice("ATF reserved memory: 0x%08llx - 0x%08llx (0x%llx)\n", mem_desc->start, mem_desc->start+mem_desc->size - 1, mem_desc->size); }
     }
-    *phy_addr = mem_desc->start;
-    *len = mem_desc->size;
+    if (mem_desc) {
+        *phy_addr = mem_desc->start;
+        *len = mem_desc->size;
+    }
     return 0;
 }
 

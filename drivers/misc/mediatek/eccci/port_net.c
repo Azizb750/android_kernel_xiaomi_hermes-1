@@ -214,8 +214,9 @@ static int ccmni_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 		break;
 	default:
 		CCCI_INF_MSG(port->modem->index, NET, "unknown ioctl cmd=%d on %s\n", cmd, port->name);
-		break;
+		return -EOPNOTSUPP;
 	}
+	return 0;
 }
 
 static const struct net_device_ops ccmni_netdev_ops = 

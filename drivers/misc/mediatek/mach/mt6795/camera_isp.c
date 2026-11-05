@@ -7311,7 +7311,7 @@ static int compat_put_isp_read_register_data(
     /* Assume data pointer is unchanged. */
     /* err = get_user(compat_ptr(uptr), &data->pData); */
     /* err |= put_user(uptr, &data32->pData); */
-    err |= get_user(count, &data->Count);
+    err = get_user(count, &data->Count);
     err |= put_user(count, &data32->Count);
     return err;
 }

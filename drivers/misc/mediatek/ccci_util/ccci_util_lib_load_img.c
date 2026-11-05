@@ -223,7 +223,7 @@ static int check_md_header_v3(int md_id, void *parse_addr, struct ccci_image_inf
 				CCCI_UTIL_INF_MSG_WITH_ID(md_id, "DSP image offset=%x size=%x\n", image->dsp_offset, image->dsp_size);
 				if(image->dsp_offset == 0xCDCDCDAA) {
 					CCCI_UTIL_INF_MSG_WITH_ID(md_id, "DSP on EMI disabled\n");
-				} else if(image->dsp_offset&0xFFFF != 0) {
+				} else if((image->dsp_offset&0xFFFF) != 0) {
 					CCCI_UTIL_INF_MSG_WITH_ID(md_id, "DSP image offset not 64KB align\n");
 					ret = -CCCI_ERR_LOAD_IMG_MD_CHECK;
 				} else if(image->dsp_offset+image->dsp_size > md_size) {

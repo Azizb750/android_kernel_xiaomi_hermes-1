@@ -708,12 +708,12 @@ static void od_dump_analysis(void)
         DISP_REG_GET_FIELD(OD_INPUT_COUNT_FLD_INP_LINE_CNT, DISP_REG_OD_INPUT_COUNT),
         DISP_REG_GET_FIELD(OD_OUTPUT_COUNT_FLD_OUTP_PIX_CNT, DISP_REG_OD_OUTPUT_COUNT),
         DISP_REG_GET_FIELD(OD_OUTPUT_COUNT_FLD_OUTP_LINE_CNT, DISP_REG_OD_OUTPUT_COUNT),
-        !!cfg_val&(1<<0), !!cfg_val&(1<<1), 
-        !!cfg_val&(1<<2), !!cfg_val&(1<<4));
+        !!(cfg_val&(1<<0)), !!(cfg_val&(1<<1)), 
+        !!(cfg_val&(1<<2)), !!(cfg_val&(1<<4)));
 	
     DDPDUMP("in(valid%d,ready%d) out(valid%d,ready%d)\n",
-        !!status&(1<<3), !!status&(1<<2),
-        !!status&(1<<1), !!status&(1<<0));
+        !!(status&(1<<3)), !!(status&(1<<2)),
+        !!(status&(1<<1)), !!(status&(1<<0)));
 
     return;
 }

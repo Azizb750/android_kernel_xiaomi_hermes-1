@@ -2759,7 +2759,7 @@ static int compat_put_acdk_sensor_resolution_info_struct(
 	    COMPAT_ACDK_SENSOR_PRESOLUTION_STRUCT __user *data32,
 	    ACDK_SENSOR_RESOLUTION_INFO_STRUCT __user *data)
 {
-    int err;
+    int err = 0;
     /* err = copy_to_user((void*)data, (void*)data32, sizeof(compat_uptr_t) * 2); */
     /* err = copy_to_user((void*)data[0], (void*)data32[0], sizeof(ACDK_SENSOR_RESOLUTION_INFO_STRUCT)); */
     /* err = copy_to_user((void*)data[1], (void*)data32[1], sizeof(ACDK_SENSOR_RESOLUTION_INFO_STRUCT)); */
